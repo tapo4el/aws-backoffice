@@ -1,0 +1,31 @@
+#org: ilyaszainulin
+#app: node-in-aws-web
+#service: aws-backoffice
+service: product-service
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  profile: default
+  stage: dev
+  httpApi:
+    cors:
+      allowedOrigins:
+        - https://d3daouilse61ba.cloudfront.net
+      allowedMethods:
+        - GET
+
+functions:
+  getProductsList:
+    handler: api/getProductsList.getProductsList
+    events:
+      - httpApi:
+          path: /products
+          method: GET
+  getProductsById:
+    handler: api/getProductsById.getProductsById
+    events:
+      - httpApi:
+          path: /products/{productId}
+          method: GET
