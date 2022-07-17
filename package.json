@@ -1,0 +1,19 @@
+{
+  "name": "aws-backoffice",
+  "version": "1.0.0",
+  "description": "aws backoffice API",
+  "main": "index.js",
+  "scripts": {
+    "deploy": "sls deploy"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tapo4el/aws-backoffice.git"
+  },
+  "author": "IZ",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tapo4el/aws-backoffice/issues"
+  },
+  "homepage": "https://github.com/tapo4el/aws-backoffice#readme"
+}
