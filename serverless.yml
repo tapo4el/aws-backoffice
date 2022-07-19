@@ -18,13 +18,13 @@ provider:
 
 functions:
   getProductsList:
-    handler: api/getProductsList.getProductsList
+    handler: product-service/getProductsList.getProductsList
     events:
       - httpApi:
           path: /products
           method: GET
   getProductsById:
-    handler: api/getProductsById.getProductsById
+    handler: product-service/getProductsById.getProductsById
     events:
       - httpApi:
           path: /products/{productId}

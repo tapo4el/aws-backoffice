@@ -2,7 +2,7 @@
 import Mocha, { describe, it } from 'mocha';
 import { expect } from 'chai';
 
-import { getProductsById } from "../api/getProductsById.js"
+import { getProductsById } from "../../product-service/getProductsById.js"
 
 describe('Product Service', function () {
     describe('#getProductById()', function () {

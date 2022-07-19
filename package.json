@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "deploy": "sls deploy",
-    "test": "mocha"
+    "test": "mocha ./test/**/*.spec.js"
   },
   "repository": {
     "type": "git",
