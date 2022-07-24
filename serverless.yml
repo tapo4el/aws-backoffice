@@ -1,14 +1,22 @@
 #org: ilyaszainulin
 #app: node-in-aws-web
 #service: aws-backoffice
-service: product-service
+service: product-service-api
 frameworkVersion: '3'
+
+useDotenv: true
 
 provider:
   name: aws
   runtime: nodejs16.x
   profile: default
   stage: dev
+  environment:
+    DB_USER: ${env:DB_USER}
+    DB_PASS: ${env:DB_PASSWORD}
+    DB_HOST: ${env:DB_HOST}
+    DB_DATABASE: ${env:DB_DATABASE}
+    DB_PORT: ${env:DB_PORT}
   httpApi:
     cors:
       allowedOrigins:
@@ -29,3 +37,9 @@ functions:
       - httpApi:
           path: /products/{productId}
           method: GET
+  createProduct:
+    handler: product-service/createProduct.createProduct
+    events:
+      - httpApi:
+          path: /products
+          method: POST
