@@ -2,11 +2,14 @@
 
 import pkg from 'pg';
 
-const { Client } = pkg;
+import { SELECT_PRODUCTS_LIST } from './db/queries.js';
 
-const productListQuery = 'select id, title, description, price, count from products p join stocks s on p.id = s.product_id';
+const { Client } = pkg;
+const MODULE = 'getProductsList -> ';
 
 export async function getProductsList(event) {
+    console.log(MODULE, event);
+
     const client = new Client({
         user: process.env.DB_USER,
         password: process.env.DB_PASS,
@@ -17,16 +20,18 @@ export async function getProductsList(event) {
 
     try {
         await client.connect();
-        const { rows } = await client.query(productListQuery);
+        const { rows } = await client.query(SELECT_PRODUCTS_LIST);
 
         return {
             statusCode: 200,
             body: JSON.stringify(rows),
         };
     } catch (e) {
+        console.error(MODULE, e);
+
         return {
             statusCode: 500,
-            body: 'Something was wrong',
+            body: 'Something went wrong',
         };
     } finally {
         client.end()

@@ -2,11 +2,14 @@
 
 import pkg from 'pg';
 
-const { Client } = pkg;
+import { SELECT_PRODUCT } from './db/queries.js'
 
-const getProductQuery =`select id, title, description, price, count from products p join stocks s on p.id = s.product_id where p.id = $1`
+const { Client } = pkg;
+const MODULE = 'getProductById -> ';
 
 export async function getProductsById(event) {
+    console.log(MODULE, event);
+
     const { productId } = event.pathParameters;
     const client = new Client({
         user: process.env.DB_USER,
@@ -18,7 +21,7 @@ export async function getProductsById(event) {
 
     try {
         await client.connect();
-        const { rows } = await client.query(getProductQuery, [productId]);
+        const { rows } = await client.query(SELECT_PRODUCT, [productId]);
 
         if (rows) {
             return {
@@ -32,11 +35,11 @@ export async function getProductsById(event) {
             body: "Product not found",
         };
     } catch (e) {
-        console.log(e);
+        console.error(MODULE, e);
 
         return {
             statusCode: 500,
-            body: e, //??
+            body: 'Something went wrong',
         };
     } finally {
         await client.end();

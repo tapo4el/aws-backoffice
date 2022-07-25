@@ -6,29 +6,15 @@ import validator from '@middy/validator';
 import httpJsonBodyParser from '@middy/http-json-body-parser';
 import httpErrorHandler from '@middy/http-error-handler';
 
+import { inputSchema } from './validators/createProduct.js'
+import { INSERT_PRODUCT, INSERT_STOCK } from './db/queries.js';
+
 const { Client } = pkg;
-
-const productInsertQuery = 'INSERT INTO products (title, description, price) VALUES ($1, $2, $3) RETURNING id';
-const stocksInsertQuery = 'INSERT INTO stocks (product_id, count) VALUES ($1, $2)';
-
-const inputSchema = {
-    type: 'object',
-    required: ['body'],
-    properties: {
-        body: {
-            type: 'object',
-            required: ['title', 'description', 'price', 'count'],
-            properties: {
-                title: { type: 'string' },
-                description: { type: 'string' },
-                price: { type: 'number' },
-                count: { type: 'number' },
-            }
-        },
-    }
-};
+const MODULE = 'createProduct -> ';
 
 const handler = async (event) => {
+    console.log(MODULE, event);
+
     const { body: { title, description, price, count } } = event;
     const client = new Client({
         user: process.env.DB_USER,
@@ -41,8 +27,8 @@ const handler = async (event) => {
     try {
         await client.connect();
         await client.query('BEGIN');
-        const { rows: [{ id }] } = await client.query(productInsertQuery, [title, description, price]);
-        await client.query(stocksInsertQuery, [id, count]);
+        const { rows: [{ id }] } = await client.query(INSERT_PRODUCT, [title, description, price]);
+        await client.query(INSERT_STOCK, [id, count]);
         await client.query('COMMIT');
 
         return {
@@ -51,6 +37,7 @@ const handler = async (event) => {
         };
     } catch (e) {
         await client.query('ROLLBACK');
+        console.error(MODULE, e);
 
         return {
             statusCode: 500,
