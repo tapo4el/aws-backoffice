@@ -1,0 +1,23 @@
+{
+  "name": "import-service",
+  "version": "1.0.0",
+  "description": "Import service AWS",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "mocha ./test/**/*.spec.js"
+  },
+  "author": "IZ",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.137.0",
+    "@aws-sdk/s3-request-presigner": "^3.137.0",
+    "csv-parser": "^3.0.0"
+  },
+  "devDependencies": {
+    "aws-sdk-client-mock": "^2.0.0-beta.1",
+    "chai": "^4.3.6",
+    "mocha": "^10.0.0",
+    "sinon": "^14.0.0"
+  }
+}

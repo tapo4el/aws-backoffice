@@ -2,7 +2,7 @@
 
 import pkg from 'pg';
 
-import { SELECT_PRODUCTS_LIST } from './db/queries.js';
+import { SELECT_PRODUCTS_LIST } from '../db/queries.js';
 
 const { Client } = pkg;
 const MODULE = 'getProductsList -> ';

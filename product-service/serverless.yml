@@ -26,19 +26,19 @@ provider:
 
 functions:
   getProductsList:
-    handler: product-service/getProductsList.getProductsList
+    handler: functions/getProductsList.getProductsList
     events:
       - httpApi:
           path: /products
           method: GET
   getProductsById:
-    handler: product-service/getProductsById.getProductsById
+    handler: functions/getProductsById.getProductsById
     events:
       - httpApi:
           path: /products/{productId}
           method: GET
   createProduct:
-    handler: product-service/createProduct.createProduct
+    handler: functions/createProduct.createProduct
     events:
       - httpApi:
           path: /products
