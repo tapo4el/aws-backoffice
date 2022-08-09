@@ -3,7 +3,7 @@
 import pkg from 'pg';
 import  { SNSClient, PublishCommand } from "@aws-sdk/client-sns";
 
-import { INSERT_PRODUCT, INSERT_STOCK } from '../db/queries.js';
+import { INSERT_PRODUCT, INSERT_STOCK, SELECT_PRODUCT } from '../db/queries.js';
 
 const { Client } = pkg;
 const snsClient = new SNSClient({ region: 'us-east-1' });
@@ -58,6 +58,27 @@ const ProductService = {
         });
 
         await Promise.all(promises);
+    },
+
+    async getProductsById(productId) {
+        const client = new Client({
+            user: process.env.DB_USER,
+            password: process.env.DB_PASS,
+            host: process.env.DB_HOST,
+            database: process.env.DB_DATABASE,
+            port: process.env.DB_PORT,
+        });
+
+        try {
+            await client.connect();
+            const { rows } = await client.query(SELECT_PRODUCT, [productId]);
+
+            return rows;
+        } catch (e) {
+            throw Error(e);
+        } finally {
+            await client.end();
+        }
     }
 };
 export default ProductService;

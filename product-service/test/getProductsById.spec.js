@@ -1,8 +1,10 @@
 
+import sinon from 'sinon';
 import Mocha, { describe, it } from 'mocha';
 import { expect } from 'chai';
 
-import { getProductsById } from "../functions/getProductsById.js"
+import ProductService from '../services/productService.js';
+import { getProductsById } from '../functions/getProductsById.js';
 
 describe('Product Service', function () {
     describe('#getProductById()', function () {
@@ -10,29 +12,29 @@ describe('Product Service', function () {
             const event = {
                 pathParameters: { productId: "7567ec4b-b10c-45c5-9345-fc73c48a80a1" }
             }
-            const expectedBody = JSON.stringify({
-                "count": 3,
-                "description": "Short Product Description7",
-                "id": "7567ec4b-b10c-45c5-9345-fc73c48a80a1",
-                "price": 15,
-                "title": "ProductName"
-            });
+            const expectedResult = { test: true }
+            const stub = sinon.stub(ProductService, 'getProductsById').resolves(expectedResult);
 
-            const result = await getProductsById(event);
+            expect(await getProductsById(event)).to.deep.equal({
+                statusCode: 200,
+                body: JSON.stringify(expectedResult),
+            })
 
-            expect(result.statusCode).to.be.equal(200)
-            expect(result.body).to.be.equal(expectedBody)
+            stub.restore();
         });
 
         it('should return status 404 and "Product not found" message in body when the product does not exist', async function () {
             const event = {
                 pathParameters: { productId: "invalidId" }
             }
+            const stub = sinon.stub(ProductService, 'getProductsById').resolves();
 
-            const result = await getProductsById(event);
+            expect(await getProductsById(event)).to.deep.equal({
+                statusCode: 404,
+                body: 'Product not found',
+            })
 
-            expect(result.statusCode).to.be.equal(404)
-            expect(result.body).to.be.equal("Product not found")
+            stub.restore();
         });
     });
 });
