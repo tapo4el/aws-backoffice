@@ -17,12 +17,58 @@ provider:
     DB_HOST: ${env:DB_HOST}
     DB_DATABASE: ${env:DB_DATABASE}
     DB_PORT: ${env:DB_PORT}
+    SNS_ARN:
+      Ref: SNSTopic
   httpApi:
     cors:
       allowedOrigins:
         - https://d3daouilse61ba.cloudfront.net
       allowedMethods:
         - GET
+  iamRoleStatements:
+    - Effect: Allow
+      Action: 'sqs:*'
+      Resource:
+        - Fn::GetAtt: [sqsQueue, Arn]
+    - Effect: Allow
+      Action: 'sns:Publish'
+      Resource:
+        Ref: SNSTopic
+
+resources:
+  Resources:
+    sqsQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: catalogItemsQueue
+    SNSTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: createProductTopic
+    SNSSubscription:
+      Type: AWS::SNS::Subscription
+      Properties:
+        Endpoint: ${env:MAIL}
+        Protocol: email
+        TopicArn:
+          Ref: SNSTopic
+        FilterPolicy:
+          count:
+            - numeric:
+                - '<'
+                - 10
+    SNSUrgentSubscription:
+      Type: AWS::SNS::Subscription
+      Properties:
+        Endpoint: ${env:URGENT_MAIL}
+        Protocol: email
+        TopicArn:
+          Ref: SNSTopic
+        FilterPolicy:
+          count:
+            - numeric:
+                - '>='
+                - 10
 
 functions:
   getProductsList:
@@ -43,3 +89,11 @@ functions:
       - httpApi:
           path: /products
           method: POST
+  catalogBatchProcess:
+    handler: functions/catalogBatchProcess.catalogBatchProcess
+    events:
+      - sqs:
+          batchSize: 5
+          arn:
+            Fn::GetAtt: [ sqsQueue, Arn ]
+

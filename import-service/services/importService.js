@@ -1,10 +1,19 @@
 'use strict';
 
-import {S3Client, PutObjectCommand, GetObjectCommand, CopyObjectCommand, DeleteObjectCommand} from '@aws-sdk/client-s3';
+import {
+    S3Client,
+    PutObjectCommand,
+    GetObjectCommand,
+    CopyObjectCommand,
+    DeleteObjectCommand
+} from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import  { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs";
+
 import csv from 'csv-parser';
 
 
+const sqsClient = new SQSClient({ region: 'us-east-1' });
 const s3Client = new S3Client({ region: 'us-east-1' });
 const BUCKET = 'import-service-storage';
 
@@ -33,7 +42,7 @@ const ImportService = {
 
             await new Promise((resolve, reject) => {
                 stream.Body.pipe(csv())
-                    .on('data', data => console.log(data))
+                    .on('data', this.sendToQueue)
                     .on('error', reject)
                     .on('end', resolve)
             });
@@ -48,6 +57,21 @@ const ImportService = {
         })
 
         await Promise.all(promises);
+    },
+
+    async sendToQueue(data) {
+        try {
+            const params = {
+                MessageBody: JSON.stringify(data),
+                QueueUrl: process.env.SQS_URL
+            }
+
+            await sqsClient.send(new SendMessageCommand(params));
+
+        } catch (e) {
+            console.log(e);
+        }
+
     }
 }
 export default ImportService;
