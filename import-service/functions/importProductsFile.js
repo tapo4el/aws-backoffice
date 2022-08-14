@@ -1,7 +1,7 @@
 'use strict';
 
 import ImportService from '../services/importService.js';
-
+import { corsHeaders } from '../helpers/httpHelpers.js';
 
 const MODULE = 'importProductsFile -> ';
 
@@ -22,6 +22,7 @@ export const importProductsFile = async (event) => {
 
         return {
             statusCode: 200,
+            headers: corsHeaders,
             body: signedUrl
         }
 

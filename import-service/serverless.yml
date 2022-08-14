@@ -35,9 +35,16 @@ functions:
   importProductsFile:
     handler: functions/importProductsFile.importProductsFile
     events:
-      - httpApi:
+      - http:
           path: /import
           method: GET
+          cors: true
+          authorizer:
+            name: basicAuthorizer
+            resultTtlInSeconds: 0
+            arn: 'arn:aws:lambda:us-east-1:735574760852:function:authorization-service-dev-basicAuthorizer'
+            identitySource: method.request.header.Authorization
+            type: token
 
   importFileParser:
     handler: functions/importFileParser.importFileParser
