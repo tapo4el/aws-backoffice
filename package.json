@@ -1,0 +1,25 @@
+{
+  "name": "aws-backoffice",
+  "version": "1.0.0",
+  "description": "aws backoffice API",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "deploy": "sls deploy",
+    "test": "mocha ./test/**/*.spec.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tapo4el/aws-backoffice.git"
+  },
+  "author": "IZ",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tapo4el/aws-backoffice/issues"
+  },
+  "homepage": "https://github.com/tapo4el/aws-backoffice#readme",
+  "devDependencies": {
+    "chai": "^4.3.6",
+    "mocha": "^10.0.0"
+  }
+}
