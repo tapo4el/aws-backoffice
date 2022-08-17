@@ -55,3 +55,15 @@ functions:
           rules:
             - prefix: uploaded/
           existing: true
+
+resources:
+  Resources:
+    GatewayResponseAuth:
+      Type: AWS::ApiGateway::GatewayResponse
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'https://d3daouilse61ba.cloudfront.net'"
+          gatewayresponse.header.Access-Control-Allow-Methods: "'OPTIONS,GET,PUT,DELETE,POST'"
+        ResponseType: DEFAULT_4XX
+        RestApiId:
+          Ref: ApiGatewayRestApi
