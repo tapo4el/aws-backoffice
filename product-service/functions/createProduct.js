@@ -6,8 +6,8 @@ import validator from '@middy/validator';
 import httpJsonBodyParser from '@middy/http-json-body-parser';
 import httpErrorHandler from '@middy/http-error-handler';
 
-import { inputSchema } from './validators/createProduct.js'
-import { INSERT_PRODUCT, INSERT_STOCK } from './db/queries.js';
+import { inputSchema } from '../validators/createProduct.js'
+import { INSERT_PRODUCT, INSERT_STOCK } from '../db/queries.js';
 
 const { Client } = pkg;
 const MODULE = 'createProduct -> ';

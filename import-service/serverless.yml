@@ -1,0 +1,44 @@
+
+service: import-service-api
+frameworkVersion: '3'
+
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  profile: default
+  stage: dev
+  httpApi:
+    cors:
+      allowedOrigins:
+        - https://d3daouilse61ba.cloudfront.net
+      allowedMethods:
+        - GET
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - 's3:ListBucket'
+      Resource: 'arn:aws:s3:::import-service-storage'
+    - Effect: Allow
+      Action:
+        - 's3:*'
+      Resource: 'arn:aws:s3:::import-service-storage/*'
+
+functions:
+  importProductsFile:
+    handler: functions/importProductsFile.importProductsFile
+    events:
+      - httpApi:
+          path: /import
+          method: GET
+
+  importFileParser:
+    handler: functions/importFileParser.importFileParser
+    events:
+      - s3:
+          bucket: import-service-storage
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: uploaded/
+          existing: true
