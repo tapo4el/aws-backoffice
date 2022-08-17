@@ -9,6 +9,8 @@ provider:
   runtime: nodejs16.x
   profile: default
   stage: dev
+  environment:
+      SQS_URL: ${env:SQS_URL}
   httpApi:
     cors:
       allowedOrigins:
@@ -24,6 +26,10 @@ provider:
       Action:
         - 's3:*'
       Resource: 'arn:aws:s3:::import-service-storage/*'
+    - Effect: Allow
+      Action:
+        - 'sqs:*'
+      Resource: 'arn:aws:sqs:us-east-1:735574760852:catalogItemsQueue'
 
 functions:
   importProductsFile:
