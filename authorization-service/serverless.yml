@@ -1,0 +1,17 @@
+
+service: authorization-service
+frameworkVersion: '3'
+
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  profile: default
+  stage: dev
+  environment:
+    tapo4el: ${env:tapo4el}
+
+functions:
+  basicAuthorizer:
+    handler: functions/basicAuthorizer.basicAuthorizer
