@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 import { Injectable, Dependencies } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 
@@ -9,22 +11,22 @@ export class AppService {
   }
 
   async getCart() {
-    const result = await this.httpService.get('http://tapo4el-cart-api-dev.us-east-1.elasticbeanstalk.com/api/profile/cart').toPromise();
+    const result = await this.httpService.get(process.env.cart).toPromise();
     return result.data;
   }
 
   async putCart(items) {
-    const result = await this.httpService.put('http://tapo4el-cart-api-dev.us-east-1.elasticbeanstalk.com/api/profile/cart', items).toPromise();
+    const result = await this.httpService.put(process.env.cart, items).toPromise();
     return result.data;
   }
 
   async getProducts() {
-    const result = await this.httpService.get('https://wyofw9a4rb.execute-api.us-east-1.amazonaws.com/products').toPromise();
+    const result = await this.httpService.get(process.env.product).toPromise();
     return result.data;
   }
 
   async postProduct(body) {
-    const result = await this.httpService.post('https://wyofw9a4rb.execute-api.us-east-1.amazonaws.com/products', body).toPromise();
+    const result = await this.httpService.post(process.env.product, body).toPromise();
     return result.data;
   }
 }
